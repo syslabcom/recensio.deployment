@@ -1,0 +1,71 @@
+from batou.component import Attribute
+from batou.component import Component
+from batou.lib.file import Directory
+from batou.lib.git import Clone
+from batou.lib.buildout import Buildout
+from batou.lib.supervisor import Eventlistener
+from batou.lib.supervisor import Program
+from batou.utils import Address
+
+
+class Zope(Component):
+    """Deploys the zope instance with all dependencies.
+    """
+    instance_address = Attribute(Address, '{{host.fqdn}}:8080')
+    instance1_address = Attribute(Address, '{{host.fqdn}}:8081')
+    instance2_address = Attribute(Address, '{{host.fqdn}}:8082')
+    instance3_address = Attribute(Address, '{{host.fqdn}}:8083')
+    instance4_address = Attribute(Address, '{{host.fqdn}}:8084')
+    supervisor_port = Attribute(int, 9002)
+    solr_address = Attribute(Address, '{{host.fqdn}}:8983')
+    profile = 'base'
+    branch = 'master'
+    adminpw = None
+    portals = Attribute('literal', [])
+    sentry_dsn = Attribute(str, '')
+    manage_buildout_clone = Attribute('literal', True)
+
+    features = ('instance', 'worker', 'solr')
+    numbered_instances = Attribute(int, 0)
+
+    def configure(self):
+        #self.provide('zope:http', self.instance_address)
+        self.zeo = self.require_one('zeo:server')
+
+        self.extra_parts = []
+        if 'instance' in self.features:
+            for num in range(1, self.numbered_instances + 1):
+                self.extra_parts.append('instance{0}'.format(num))
+        if 'worker' in self.features:
+            self.extra_parts.append('worker')
+        if 'solr' in self.features:
+            self.extra_parts.extend(['solr-download', 'solr-instance'])
+
+        self += Clone('https://github.com/syslabcom/recensio.buildout.git',
+                      branch=self.branch,
+                      vcs_update=self.manage_buildout_clone)
+        self += Directory('downloads')
+        self += Buildout(python='2.6',
+                         setuptools='0.6rc11',
+                         version='1.6.3',
+                         additional_config=[])
+
+        if 'instance' in self.features:
+            for num in range(1, self.numbered_instances + 1):
+                instance_id = 'instance{0}'.format(num)
+                self += Program(
+                    instance_id,
+                    options=dict(startsecs=20, stopsignal='INT', stopwaitsecs=5),
+                    command=self.map('bin/{0} console'.format(instance_id)))
+
+        if 'worker' in self.features:
+            self += Program(
+                'worker',
+                options=dict(startsecs=20, stopsignal='INT', stopwaitsecs=5),
+                command=self.map('bin/worker console'))
+
+        if 'solr' in self.features:
+            self += Program('solr',
+                            command='/usr/bin/env java',
+                            args='-Xms512m -Xmx2048m -jar start.jar',
+                            directory=self.map('parts/solr-instance'))
