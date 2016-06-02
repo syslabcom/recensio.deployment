@@ -20,9 +20,9 @@ class Zeo(Component):
                       branch=self.branch,
                       vcs_update=self.manage_buildout_clone)
         self += Directory('downloads')
-        self += Buildout(python='2.6',
-                         setuptools='0.6rc11',
-                         version='1.6.3',
+        self += Buildout(python='2.7',
+                         setuptools='22.0.0',
+                         version='2.5.1',
                          additional_config=[])
         if self.profile == 'dev':
             config_file = 'parts/zeo/etc/zeo.conf'

@@ -3,7 +3,6 @@ from batou.component import Component
 from batou.lib.file import Directory
 from batou.lib.git import Clone
 from batou.lib.buildout import Buildout
-from batou.lib.supervisor import Eventlistener
 from batou.lib.supervisor import Program
 from batou.utils import Address
 
@@ -29,7 +28,7 @@ class Zope(Component):
     numbered_instances = Attribute(int, 0)
 
     def configure(self):
-        #self.provide('zope:http', self.instance_address)
+        # self.provide('zope:http', self.instance_address)
         self.zeo = self.require_one('zeo:server')
 
         self.extra_parts = []
@@ -45,9 +44,9 @@ class Zope(Component):
                       branch=self.branch,
                       vcs_update=self.manage_buildout_clone)
         self += Directory('downloads')
-        self += Buildout(python='2.6',
-                         setuptools='0.6rc11',
-                         version='1.6.3',
+        self += Buildout(python='2.7',
+                         setuptools='22.0.0',
+                         version='2.5.1',
                          additional_config=[])
 
         if 'instance' in self.features:
