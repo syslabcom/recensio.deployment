@@ -9,6 +9,14 @@ from batou.utils import Address
 import os.path
 
 
+class DevelopAwareBuildout(Buildout):
+
+    def verify(self):
+        super(DevelopAwareBuildout, self).verify()
+        if os.path.exists('bin/develop'):
+            raise UpdateNeeded
+
+
 class Zope(Component):
     """Deploys the zope instance with all dependencies.
     """
@@ -46,10 +54,10 @@ class Zope(Component):
                       branch=self.branch,
                       vcs_update=self.manage_buildout_clone)
         self += Directory('downloads')
-        self += Buildout(python='2.7',
-                         setuptools='22.0.0',
-                         version='2.5.1',
-                         additional_config=[])
+        self += DevelopAwareBuildout(python='2.7',
+                                     setuptools='22.0.0',
+                                     version='2.5.1',
+                                     additional_config=[])
 
         if 'instance' in self.features:
             for num in range(1, self.numbered_instances + 1):
@@ -70,7 +78,3 @@ class Zope(Component):
                             command='/usr/bin/env java',
                             args='-Xms512m -Xmx2048m -jar start.jar',
                             directory=self.map('parts/solr-instance'))
-
-    def verify(self):
-        if self.manage_buildout_clone and os.path.exists('bin/develop'):
-            raise UpdateNeeded
