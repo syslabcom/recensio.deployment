@@ -1,3 +1,4 @@
+from batou import UpdateNeeded
 from batou.component import Attribute
 from batou.component import Component
 from batou.lib.file import Directory
@@ -5,6 +6,7 @@ from batou.lib.git import Clone
 from batou.lib.buildout import Buildout
 from batou.lib.supervisor import Program
 from batou.utils import Address
+import os.path
 
 
 class Zope(Component):
@@ -68,3 +70,7 @@ class Zope(Component):
                             command='/usr/bin/env java',
                             args='-Xms512m -Xmx2048m -jar start.jar',
                             directory=self.map('parts/solr-instance'))
+
+    def verify(self):
+        if self.manage_buildout_clone and os.path.exists('bin/develop'):
+            raise UpdateNeeded
