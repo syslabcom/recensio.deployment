@@ -25,7 +25,8 @@ class Zope(Component):
     instance2_address = Attribute(Address, '{{host.fqdn}}:8082')
     instance3_address = Attribute(Address, '{{host.fqdn}}:8083')
     instance4_address = Attribute(Address, '{{host.fqdn}}:8084')
-    supervisor_port = Attribute(int, 9002)
+    instancebots_address = Attribute(Address, '{{host.fqdn}}:8089')
+    worker_address = Attribute(Address, '{{host.fqdn}}:8099')
     solr_address = Attribute(Address, '{{host.fqdn}}:8983')
     profile = 'base'
     branch = 'master'
@@ -34,7 +35,7 @@ class Zope(Component):
     sentry_dsn = Attribute(str, '')
     manage_buildout_clone = Attribute('literal', True)
 
-    features = ('instance', 'worker', 'solr')
+    features = ('instance', 'worker', 'instancebots', 'solr')
     numbered_instances = Attribute(int, 0)
 
     def configure(self):
@@ -45,6 +46,8 @@ class Zope(Component):
         if 'instance' in self.features:
             for num in range(1, self.numbered_instances + 1):
                 self.extra_parts.append('instance{0}'.format(num))
+        if 'instancebots' in self.features:
+            self.extra_parts.append('instancebots')
         if 'worker' in self.features:
             self.extra_parts.append('worker')
         if 'solr' in self.features:
