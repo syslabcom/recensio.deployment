@@ -70,6 +70,12 @@ class Zope(Component):
                     options=dict(startsecs=20, stopsignal='INT', stopwaitsecs=5),
                     command=self.map('bin/{0} console'.format(instance_id)))
 
+        if 'instancebots' in self.features:
+            self += Program(
+                'instancebots',
+                options=dict(startsecs=20, stopsignal='INT', stopwaitsecs=5),
+                command=self.map('bin/instancebots console'))
+
         if 'worker' in self.features:
             self += Program(
                 'worker',
