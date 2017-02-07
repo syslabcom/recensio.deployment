@@ -4,6 +4,7 @@ from batou.component import Component
 from batou.lib.file import Directory
 from batou.lib.git import Clone
 from batou.lib.buildout import Buildout
+from batou.lib.supervisor import Eventlistener
 from batou.lib.supervisor import Program
 from batou.utils import Address
 import os.path
@@ -70,17 +71,32 @@ class Zope(Component):
                     options=dict(startsecs=20, stopsignal='INT', stopwaitsecs=5),
                     command=self.map('bin/{0} console'.format(instance_id)))
 
+                self += Eventlistener(
+                    'memmon{0}'.format(num),
+                    command='bin/memmon',
+                    args='-p instance{0}=2GB -m admin@syslab.com'.format(num))
+
         if 'instancebots' in self.features:
             self += Program(
                 'instancebots',
                 options=dict(startsecs=20, stopsignal='INT', stopwaitsecs=5),
                 command=self.map('bin/instancebots console'))
 
+            self += Eventlistener(
+                'memmonbots',
+                command='bin/memmon',
+                args='-p instancebots=2GB')
+
         if 'worker' in self.features:
             self += Program(
                 'worker',
                 options=dict(startsecs=20, stopsignal='INT', stopwaitsecs=5),
                 command=self.map('bin/worker console'))
+
+            self += Eventlistener(
+                'memmonworker',
+                command='bin/memmon',
+                args='-p worker=2GB -m admin@syslab.com')
 
         if 'solr' in self.features:
             self += Program('solr',
