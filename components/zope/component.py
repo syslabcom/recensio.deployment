@@ -54,14 +54,15 @@ class Zope(Component):
         if 'solr' in self.features:
             self.extra_parts.extend(['solr-download', 'solr-instance'])
 
-        self += Clone('https://github.com/syslabcom/recensio.buildout.git',
-                      branch=self.branch,
-                      vcs_update=self.manage_buildout_clone)
         self += Directory('downloads')
-        self += DevelopAwareBuildout(python='2.7',
-                                     setuptools='22.0.0',
-                                     version='2.5.1',
-                                     additional_config=[])
+        buildout = DevelopAwareBuildout(python='2.7',
+                                        setuptools='22.0.0',
+                                        version='2.5.1',
+                                        additional_config=[])
+        self += buildout
+        buildout += Clone('https://github.com/syslabcom/recensio.buildout.git',
+                          branch=self.branch,
+                          vcs_update=self.manage_buildout_clone)
 
         if 'instance' in self.features:
             for num in range(1, self.numbered_instances + 1):
