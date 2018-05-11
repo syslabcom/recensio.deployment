@@ -15,7 +15,7 @@ import subprocess
 # download and copy this file to bootstrap a new batou installation.
 BOOTSTRAP_VERSION_MARKER = '{' + '{version}' + '}'
 
-version = os.environ.get('BATOU_VERSION', '1.3.5')
+version = os.environ.get('BATOU_VERSION', '1.7.5')
 develop = os.environ.get('BATOU_DEVELOP', '')
 
 
@@ -52,6 +52,11 @@ os.chdir(base)
 if 'PYTHONPATH' in os.environ:
     del os.environ['PYTHONPATH']
 
+if '--reset' in sys.argv:
+    print "Resetting batou env ..."
+    cmd('rm -rf .batou')
+
+
 # Do we have a virtualenv?
 if not os.path.exists(base + '/.batou'):
     install_venv()
@@ -82,11 +87,11 @@ def prepare():
             # we're bootstrapping a new project. just get whatever version.
             # this will self-destruct this file later. :)
             develop = ''
-            spec = '--egg batou --pre'
+            spec = 'batou --pre'
         elif develop:
             spec = '-e {}'.format(develop)
         else:
-            spec = '--egg batou=={}'.format(version)
+            spec = 'batou=={}'.format(version)
 
         cmd('.batou/bin/pip install --ignore-installed {}'.format(spec))
 
