@@ -35,6 +35,7 @@ class Zope(Component):
     portals = Attribute('literal', [])
     sentry_dsn = Attribute(str, '')
     manage_buildout_clone = Attribute('literal', True)
+    eggserver = ''
 
     features = ('instance', 'worker', 'instancebots', 'solr')
     numbered_instances = Attribute(int, 0)
