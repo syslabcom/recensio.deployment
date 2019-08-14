@@ -28,7 +28,6 @@ class Zope(Component):
     instance4_address = Attribute(Address, '{{host.fqdn}}:8084')
     instancebots_address = Attribute(Address, '{{host.fqdn}}:8089')
     worker_address = Attribute(Address, '{{host.fqdn}}:8099')
-    solr_address = Attribute(Address, '{{host.fqdn}}:8983')
     profile = 'base'
     branch = 'master'
     adminpw = None
@@ -37,12 +36,13 @@ class Zope(Component):
     manage_buildout_clone = Attribute('literal', True)
     eggserver = ''
 
-    features = ('instance', 'worker', 'instancebots', 'solr')
+    features = ('instance', 'worker', 'instancebots', )
     numbered_instances = Attribute(int, 0)
 
     def configure(self):
         # self.provide('zope:http', self.instance_address)
         self.zeo = self.require_one('zeo:server')
+        self.solr = self.require_one('solr:server')
 
         self.extra_parts = []
         if 'instance' in self.features:
@@ -101,7 +101,7 @@ class Zope(Component):
                 args='-p worker=2GB -m admin@syslab.com')
 
         if 'solr' in self.features:
-            self += Program('solr',
+            self += Program('solr3',
                             command='/usr/bin/env java',
                             args='-Xms512m -Xmx2048m -jar start.jar',
                             directory=self.map('parts/solr-instance'))
