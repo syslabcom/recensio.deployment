@@ -28,6 +28,7 @@ class Zope(Component):
     instance4_address = Attribute(Address, '{{host.fqdn}}:8084')
     instancebots_address = Attribute(Address, '{{host.fqdn}}:8089')
     worker_address = Attribute(Address, '{{host.fqdn}}:8099')
+    solr_address = Attribute(Address, '{{host.fqdn}}:8983')
     profile = 'base'
     branch = 'master'
     adminpw = None
