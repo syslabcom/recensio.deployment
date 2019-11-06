@@ -7,6 +7,7 @@ from batou.lib.buildout import Buildout
 from batou.lib.supervisor import Eventlistener
 from batou.lib.supervisor import Program
 from batou.utils import Address
+import batou_ext.nix
 import os.path
 
 
@@ -55,6 +56,42 @@ class Zope(Component):
             self.extra_parts.append('worker')
         if 'solr' in self.features:
             self.extra_parts.extend(['solr-download', 'solr-instance'])
+
+        self += batou_ext.nix.UserEnv(
+            "zope",
+            packages=[
+                "abiword",
+                "aespipe",
+                "cron",
+                "cyrus_sasl",
+                "enchant",
+                "gcc",
+                "gettext",
+                "ghostscript",
+                "gnumake",
+                "graphicsmagick",
+                "html-tidy",
+                "jre8",
+                "libedit",
+                "libffi",
+                "libjpeg",
+                "libxslt",
+                "libyaml",
+                "pdf2svg",
+                "pdftk",
+                "perl",
+                "perlPackages.LWPProtocolHttps",
+                "perlPackages.LWPUserAgent",
+                "perlPackages.MonitoringPlugin",
+                "poppler_utils",
+                "tmpwatch",
+                "wkhtmltopdf"
+                "wv",
+                "yarn",
+                "zlib",
+            ],
+            channel="https://releases.nixos.org/nixos/19.03/nixos-19.03.173575.0e0ee084d6d/nixexprs.tar.xz"
+        )
 
         self += Directory('downloads')
         buildout = DevelopAwareBuildout(python='2.7',
