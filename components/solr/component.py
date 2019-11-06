@@ -3,6 +3,7 @@ from batou.lib.buildout import Buildout
 from batou.lib.file import Directory
 from batou.lib.supervisor import Program
 from batou.utils import Address
+import batou_ext.nix
 
 
 class Solr4(Component):
@@ -49,6 +50,13 @@ class Solr5(Component):
         )
         self.md5sum = 'b15105d42936f33de3e5d241c6e6cf71'
 
+        self += batou_ext.nix.UserEnv(
+            "solr",
+            packages=[
+                "jre8",
+            ],
+            channel="https://releases.nixos.org/nixos/19.03/nixos-19.03.173575.0e0ee084d6d/nixexprs.tar.xz"
+        )
         self += Buildout(
             python='2.7',
             setuptools='38.5.1',

@@ -71,7 +71,6 @@ class Zope(Component):
                 "gnumake",
                 "graphicsmagick",
                 "html-tidy",
-                "jre8",
                 "libedit",
                 "libffi",
                 "libjpeg",
