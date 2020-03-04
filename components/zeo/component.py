@@ -8,28 +8,30 @@ from batou.utils import Address
 
 
 class Zeo(Component):
-    address = Attribute(Address, '{{host.fqdn}}:9000')
-    profile = 'base'
-    branch = 'master'
-    manage_buildout_clone = Attribute('literal', True)
+    address = Attribute(Address, "{{host.fqdn}}:9000")
+    profile = "base"
+    branch = "master"
+    manage_buildout_clone = Attribute("literal", True)
 
     def configure(self):
-        self.provide('zeo:server', self.address)
+        self.provide("zeo:server", self.address)
 
-        self += Clone('https://github.com/syslabcom/recensio.buildout.git',
-                      branch=self.branch,
-                      vcs_update=self.manage_buildout_clone)
-        self += Directory('downloads')
-        self += Buildout(python='2.7',
-                         setuptools='22.0.0',
-                         version='2.5.1',
-                         additional_config=[])
-        if self.profile == 'dev':
-            config_file = 'parts/zeo/etc/zeo.conf'
+        self += Clone(
+            "https://github.com/syslabcom/recensio.buildout.git",
+            branch=self.branch,
+            vcs_update=self.manage_buildout_clone,
+        )
+        self += Directory("downloads")
+        self += Buildout(
+            python="2.7", setuptools="38.5.1", version="2.11.4", additional_config=[]
+        )
+        if self.profile == "dev":
+            config_file = "parts/zeo/etc/zeo.conf"
         else:
-            config_file = 'parts/zeo/zeo.conf'
+            config_file = "parts/zeo/zeo.conf"
         self += Program(
-            'zeo',
+            "zeo",
             options=dict(startsecs=30),
-            command=self.map('bin/runzeo'),
-            args=self.expand('-C {{component.workdir}}/' + config_file))
+            command=self.map("bin/runzeo"),
+            args=self.expand("-C {{component.workdir}}/" + config_file),
+        )
