@@ -16,6 +16,7 @@ syntax:glob
 .git/**
 .installed.cfg
 .mr.developer.cfg
+.pre-commit-config.yaml
 .Python
 .todo
 bin
