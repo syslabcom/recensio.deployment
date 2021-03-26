@@ -1,0 +1,7 @@
+# ZEO database maintenance
+for db in 1 async; do
+    {{component.workdir}}/bin/zeopack -d 7 "{{component.address.listen}}:${db}"
+    chattr +d {{component.workdir}}/parts/*/*.old 2>/dev/null
+done
+
+# vim: set ft=sh:
