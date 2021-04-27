@@ -7,6 +7,7 @@ from batou.lib.file import File
 from batou.lib.git import Clone
 from batou.lib.supervisor import Program
 from batou.utils import Address
+import batou_ext.nix
 
 
 class Zeo(Component):
@@ -17,6 +18,41 @@ class Zeo(Component):
 
     def configure(self):
         self.provide("zeo:server", self.address)
+
+        self += batou_ext.nix.UserEnv(
+            "zope",
+            packages=[
+                "abiword",
+                "aespipe",
+                "cron",
+                "cyrus_sasl",
+                "enchant",
+                "gcc",
+                "gettext",
+                "ghostscript",
+                "gnumake",
+                "graphicsmagick",
+                "html-tidy",
+                "libedit",
+                "libffi",
+                "libjpeg",
+                "libxslt",
+                "libyaml",
+                "pdf2svg",
+                "pdftk",
+                "perl",
+                "perlPackages.LWPProtocolHttps",
+                "perlPackages.LWPUserAgent",
+                "perlPackages.MonitoringPlugin",
+                "poppler_utils",
+                "tmpwatch",
+                "wkhtmltopdf",
+                "wv",
+                "yarn",
+                "zlib",
+            ],
+            channel="https://releases.nixos.org/nixos/19.03/nixos-19.03.173575.0e0ee084d6d/nixexprs.tar.xz",
+        )
 
         self += Clone(
             "https://github.com/syslabcom/recensio.buildout.git",

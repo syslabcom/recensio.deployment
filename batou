@@ -15,7 +15,7 @@ import subprocess
 # download and copy this file to bootstrap a new batou installation.
 BOOTSTRAP_VERSION_MARKER = '{' + '{version}' + '}'
 
-version = os.environ.get('BATOU_VERSION', '1.7.5')
+version = os.environ.get('BATOU_VERSION', '1.11.0')
 develop = os.environ.get('BATOU_DEVELOP', '')
 
 

@@ -1,0 +1,1 @@
+batou_ext @ https://github.com/flyingcircusio/batou_ext/archive/6b9002bd84f68120f2ce50a4155afaaef647831e.zip#sha256=8567df82798cd42872e27aa2429bf31c4048190c8467cb65c0723bed60a97803
