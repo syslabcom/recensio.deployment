@@ -58,8 +58,8 @@ class Zope(Component):
 
         self += Directory('downloads')
         buildout = DevelopAwareBuildout(python='2.7',
-                                        setuptools='38.5.1',
-                                        version='2.11.4',
+                                        setuptools='42.0.2',
+                                        version='2.13.3',
                                         additional_config=[])
         self += buildout
         buildout += Clone('https://github.com/syslabcom/recensio.buildout.git',
