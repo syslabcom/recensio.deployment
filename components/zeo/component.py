@@ -1,7 +1,8 @@
 from batou.component import Attribute
 from batou.component import Component
 from batou.lib.buildout import Buildout
-from batou.lib.cron import CronJob
+
+# from batou.lib.cron import CronJob
 from batou.lib.file import Directory
 from batou.lib.file import File
 from batou.lib.git import Clone
@@ -38,6 +39,6 @@ class Zeo(Component):
             args=self.expand("-C {{component.workdir}}/" + config_file),
         )
 
-        self += File('bin/pack', source='pack', mode=0750)
-        self += CronJob(self.map('bin/pack'),
-                        timing='@weekly', logger='zeopack')
+        self += File("bin/pack", source="pack", mode=0750)
+        # self += CronJob(self.map('bin/pack'),
+        #                timing='@weekly', logger='zeopack')
