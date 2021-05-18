@@ -1,6 +1,7 @@
 from batou import UpdateNeeded
 from batou.component import Attribute
 from batou.component import Component
+from batou.lib.cron import CronJob
 from batou.lib.file import Directory
 from batou.lib.git import Clone
 from batou.lib.buildout import Buildout
@@ -39,6 +40,8 @@ class Zope(Component):
 
     features = ('instance', 'worker', 'instancebots', )
     numbered_instances = Attribute(int, 0)
+    run_exports_on = None
+    run_imports_on = None
 
     def configure(self):
         # self.provide('zope:http', self.instance_address)
@@ -106,3 +109,55 @@ class Zope(Component):
                             command='/usr/bin/env java',
                             args='-Xms512m -Xmx2048m -jar start.jar',
                             directory=self.map('parts/solr-instance'))
+
+        if self.host.name == self.run_exports_on:
+            self += CronJob(
+                self.map("bin/metadata-export"),
+                timing="20 22 * * sun",
+                logger="recensio")
+            self += CronJob(
+                self.map("bin/metadata-export-regio"),
+                timing="00 23 * * sun",
+                logger="recensio")
+            self += CronJob(
+                self.map("bin/metadata-export-altertum"),
+                timing="30 23 * * sun",
+                logger="recensio")
+            self += CronJob(
+                self.map("bin/metadata-export-artium"),
+                timing="55 23 * * sun",
+                logger="recensio")
+            self += CronJob(
+                self.map("bin/chronicon-export"),
+                timing="27 2 1 * *",
+                logger="recensio")
+            self += CronJob(
+                self.map("bin/chronicon-export-regio"),
+                timing="57 2 1 * *",
+                logger="recensio")
+            self += CronJob(
+                self.map("bin/chronicon-export-altertum"),
+                timing="27 3 1 * *",
+                logger="recensio")
+            # chronicon artium skipped on purpose
+            self += CronJob(
+                self.map("bin/newsletter"),
+                timing="0 12 20 * *",
+                logger="recensio")
+            self += CronJob(
+                "wget --output-file=/dev/null --output-document=/dev/null http://www.recensio.net/RSS-feeds/mail_uncommented_presentations",
+                timing="0 12 * * *",
+                logger="recensio")
+        if self.host.name == self.run_imports_on:
+            self += CronJob(
+                self.map("bin/sehepunkte-import"),
+                timing="00 22 * * sun",
+                logger="recensio")
+            self += CronJob(
+                self.map("bin/sehepunkte-import-artium"),
+                timing="30 23 * * sun",
+                logger="recensio")
+            self += CronJob(
+                "/home/recensio/dehydrated/certs.sh",
+                timing="3 23 * * *",
+                logger="recensio")
