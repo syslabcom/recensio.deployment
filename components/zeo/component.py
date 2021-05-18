@@ -26,7 +26,7 @@ class Zeo(Component):
         )
         self += Directory("downloads")
         self += Buildout(
-            python="2.7", setuptools="38.5.1", version="2.11.4", additional_config=[]
+            python="2.7", setuptools="42.0.2", version="2.13.3", additional_config=[]
         )
         if self.profile == "dev":
             config_file = "parts/zeo/etc/zeo.conf"
