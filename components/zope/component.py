@@ -5,6 +5,7 @@ from batou.lib.cron import CronJob
 from batou.lib.file import Directory
 from batou.lib.git import Clone
 from batou.lib.buildout import Buildout
+from batou.lib.logrotate import RotatedLogfile
 from batou.lib.supervisor import Eventlistener
 from batou.lib.supervisor import Program
 from batou.utils import Address
@@ -81,6 +82,11 @@ class Zope(Component):
                     'memmon{0}'.format(num),
                     command='bin/memmon',
                     args='-p instance{0}=2GB -m admin@syslab.com'.format(num))
+
+            postrotate = self.expand(
+                "for i in {{component.workdir}}/var/*.pid; do kill -USR2 `cat $i`; done"
+            )
+            self += RotatedLogfile("var/log/*.log", postrotate=postrotate)
 
         if 'instancebots' in self.features:
             self += Program(
