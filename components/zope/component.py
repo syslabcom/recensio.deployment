@@ -155,11 +155,11 @@ class Zope(Component):
         if 'imports' in self.features:
             self += CronJob(
                 self.map("bin/sehepunkte-import"),
-                timing="00 22 * * sun",
+                timing="00 2 21 * *",
                 logger="recensio")
             self += CronJob(
                 self.map("bin/sehepunkte-import-artium"),
-                timing="30 23 * * sun",
+                timing="30 2 21 * *",
                 logger="recensio")
             self += CronJob(
                 "/home/recensio/dehydrated/certs.sh",
