@@ -41,8 +41,6 @@ class Zope(Component):
 
     features = ('instance', 'worker', 'instancebots', )
     numbered_instances = Attribute(int, 0)
-    run_exports_on = None
-    run_imports_on = None
 
     def configure(self):
         # self.provide('zope:http', self.instance_address)
@@ -116,7 +114,7 @@ class Zope(Component):
                             args='-Xms512m -Xmx2048m -jar start.jar',
                             directory=self.map('parts/solr-instance'))
 
-        if self.host.name == self.run_exports_on:
+        if 'exports' in self.features:
             self += CronJob(
                 self.map("bin/metadata-export"),
                 timing="20 22 * * sun",
@@ -154,7 +152,7 @@ class Zope(Component):
                 "wget --output-file=/dev/null --output-document=/dev/null http://www.recensio.net/RSS-feeds/mail_uncommented_presentations",
                 timing="0 12 * * *",
                 logger="recensio")
-        if self.host.name == self.run_imports_on:
+        if 'imports' in self.features:
             self += CronJob(
                 self.map("bin/sehepunkte-import"),
                 timing="00 22 * * sun",
