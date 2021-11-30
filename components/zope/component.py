@@ -148,10 +148,6 @@ class Zope(Component):
                 self.map("bin/newsletter"),
                 timing="0 12 20 * *",
                 logger="recensio")
-            self += CronJob(
-                "wget --output-file=/dev/null --output-document=/dev/null http://www.recensio.net/RSS-feeds/mail_uncommented_presentations",
-                timing="0 12 * * *",
-                logger="recensio")
         if 'imports' in self.features:
             self += CronJob(
                 self.map("bin/sehepunkte-import"),
