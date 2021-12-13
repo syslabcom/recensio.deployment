@@ -61,5 +61,6 @@ class Solr5(Component):
 
         self += Program('solr',
                         command='/usr/bin/env java',
-                        args=self.expand('-Xms512m -Xmx2048m -jar start.jar --module=http jetty.host={{component.address.connect.host}} jetty.port={{component.address.connect.port}}'),
+                        args=self.expand('-Xms512m -Xmx2048m -Dlog4j2.formatMsgNoLookups=true -jar start.jar --module=http jetty.host={{component.address.connect.host}} jetty.port={{component.address.connect.port}}'),
+
                         directory=self.map('parts/instance'))
