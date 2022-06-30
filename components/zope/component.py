@@ -128,10 +128,6 @@ class Zope(Component):
                 timing="30 23 * * sun",
                 logger="recensio")
             self += CronJob(
-                self.map("bin/metadata-export-artium"),
-                timing="55 23 * * sun",
-                logger="recensio")
-            self += CronJob(
                 self.map("bin/chronicon-export"),
                 timing="27 2 1 * *",
                 logger="recensio")
@@ -143,7 +139,6 @@ class Zope(Component):
                 self.map("bin/chronicon-export-altertum"),
                 timing="27 3 1 * *",
                 logger="recensio")
-            # chronicon artium skipped on purpose
             self += CronJob(
                 self.map("bin/newsletter"),
                 timing="0 12 20 * *",
@@ -152,10 +147,6 @@ class Zope(Component):
             self += CronJob(
                 self.map("bin/sehepunkte-import"),
                 timing="00 2 21 * *",
-                logger="recensio")
-            self += CronJob(
-                self.map("bin/sehepunkte-import-artium"),
-                timing="30 2 21 * *",
                 logger="recensio")
             self += CronJob(
                 "/home/recensio/dehydrated/certs.sh",
